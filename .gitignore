@@ -1,0 +1,38 @@
+ITIGNORE
+# ============================
+# Secrets & credentials — NEVER commit
+# ============================
+kaggle.json
+.env
+*.env
+ 
+# ============================
+# Python environment
+# ============================
+.venv/
+venv/
+__pycache__/
+*.pyc
+.ipynb_checkpoints/
+ 
+# ============================
+# Data — regenerable, not source of truth
+# (recreated by src/extract/download_kaggle.py + Phase 1 profiling script)
+# ============================
+data/raw/*
+data/bronze/*
+!data/raw/.gitkeep
+!data/bronze/.gitkeep
+ 
+# ============================
+# Power BI temp/lock files
+# ============================
+~$*.pbix
+*.pbix.bak
+ 
+# ============================
+# OS / editor noise
+# ============================
+.DS_Store
+.vscode/
+.idea/
