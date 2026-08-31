@@ -147,22 +147,13 @@ python src/extract/download_kaggle.py
 
 Then, in order: run `databricks/bronze/01_ingest_bronze.py` → `databricks/silver/02_clean_transform_silver.py` → `databricks/gold/03_build_gold_tables.sql` in a Databricks Free Edition workspace, run `sql/validate_*.sql` to confirm your numbers match the ones documented here, then connect `powerbi/steam_dashboard.pbix` (or rebuild the connection) using your own Databricks server hostname / HTTP path.
 
-## Skills Demonstrated
-
-| Stack area | Demonstrated by |
-|---|---|
-| Python / Pandas | Profiling and structural validation pipeline (Phase 1) before any transformation |
-| SQL | Gold-layer business logic, window functions for YoY growth with a division-by-zero guard, independent validation queries written *before* DAX |
-| Databricks | Medallion architecture on Unity Catalog (Free Edition); diagnosed and fixed a real Delta ingestion bug at its root cause |
-| PySpark / Delta Lake | Bronze/Silver transformations, `explode()` for grain changes, defensive casting, Delta schema evolution |
-| Power BI / DAX | Import-mode semantic model, bidirectional relationship design, ratio-of-sums vs. naive-average pattern, `BLANK()`-handling for an incomplete time period |
-
 ## Project Status
 
 | Phase | Status |
 |---|---|
-| 1. Python ETL & Profiling | ✅ Done |
-| 2. Databricks Medallion Setup | ✅ Done |
-| 3. SQL Analytics & Gold Tables | ✅ Done |
-| 4. Power BI Modeling & DAX | ✅ Done |
-| 5. Documentation | ✅ Done (Power BI Service publish intentionally out of scope — see Limitations) |
+| 1. Python ETL & Profiling | Done |
+| 2. Databricks Medallion Setup | Done |
+| 3. SQL Analytics & Gold Tables | Done |
+| 4. Power BI Modeling & DAX | Done |
+| 5. Documentation | Done |
+| 6. Build web page using FastAPI + React | In Progress... |
