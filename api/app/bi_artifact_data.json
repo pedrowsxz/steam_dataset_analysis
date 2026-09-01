@@ -1,0 +1,26 @@
+{
+  "dax_measures": [
+    {
+      "name": "Positive Review Rate",
+      "expression": "DIVIDE(SUM(fact_games[positive_ratings]), SUM(fact_games[total_ratings]))",
+      "description": "Ratio of positive to total ratings, aggregated across all matching games — never an average of per-game rates, which would over-weight low-review titles."
+    },
+    {
+      "name": "Total Games",
+      "expression": "COUNTROWS(fact_games)",
+      "description": "Row count of the fact table for the current filter context."
+    },
+    {
+      "name": "Avg Price Paid",
+      "expression": "CALCULATE(AVERAGE(fact_games[price]), fact_games[is_free] = FALSE)",
+      "description": "Mean listed price across non-free games only."
+    }
+  ],
+  "data_model_notes": "PLACEHOLDER — replace with the real content from powerbi/dax_measures.md and docs/data_dictionary.md before deploying.",
+  "pbix_reference": {
+    "filename": "steam_dashboard.pbix",
+    "note": "Lives in the repo under powerbi/ — this tab links to it, it does not embed or host it."
+  },
+  "screenshots": ["overview.png", "pricing_reviews.png", "temporal_trends.png"],
+  "powerbi_embed_url": null
+}
