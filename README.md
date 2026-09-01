@@ -4,28 +4,16 @@ End-to-end BI project: raw Kaggle data → Medallion Lakehouse (Databricks Free 
 
 ## Screenshots
 
-*(adjust filenames to match what's actually committed under `docs/screenshots/`)*
 
 | Market Overview | Pricing & Reviews | Temporal Trends |
 |---|---|---|
-| ![Market Overview](docs/screenshots/page1_market_overview.png) | ![Pricing & Reviews](docs/screenshots/page2_pricing_reviews.png) | ![Temporal Trends](docs/screenshots/page3_temporal_trends.png) |
+| ![Market Overview](powerbi/page1.png) | ![Pricing & Reviews](powerbi/page1.png) | ![Temporal Trends](powerbi/page1.png) |
 
 ## Business Problem
 
 > How can a digital game store understand market trends, pricing strategies, and platform performance to optimize its catalog and marketing?
 
 ## Architecture
-
-```mermaid
-flowchart LR
-    A["Kaggle CSV<br/>steam.csv, ~27K rows"] --> B["Python / Pandas<br/>Profiling + Validation"]
-    B --> C[("Bronze<br/>workspace.bronze.steam_games")]
-    C --> D["PySpark<br/>Clean + Explode"]
-    D --> E[("Silver<br/>games / game_genres / game_platforms")]
-    E --> F["SQL<br/>Business Logic"]
-    F --> G[("Gold<br/>fact_games / game_genres")]
-    G --> H["Power BI<br/>Import Mode + DAX"]
-```
 
 | Layer | Tool | Role |
 |---|---|---|
