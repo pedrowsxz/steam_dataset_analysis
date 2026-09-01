@@ -5,9 +5,15 @@ End-to-end BI project: raw Kaggle data → Medallion Lakehouse (Databricks Free 
 ## Screenshots
 
 
-| Market Overview | Pricing & Reviews | Temporal Trends |
-|---|---|---|
-| ![Market Overview](powerbi/page1.png) | ![Pricing & Reviews](powerbi/page2.png) | ![Temporal Trends](powerbi/page3.png) |
+Market Overview
+![Market Overview](powerbi/page1.png)
+
+Pricing & Reviews
+![Pricing & Reviews](powerbi/page2.png)
+
+Temporal Trends
+![Temporal Trends](powerbi/page1.png)
+
 
 ## Business Problem
 
