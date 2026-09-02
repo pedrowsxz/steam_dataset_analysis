@@ -151,3 +151,5 @@ Then, in order: run `databricks/bronze/01_ingest_bronze.py` → `databricks/silv
 | 4. Power BI Modeling & DAX | Done |
 | 5. Documentation | Done |
 | 6. Build web page using FastAPI + React | In Progress... |
+
+# CI/CD Enabled
