@@ -1,26 +1,56 @@
 {
   "dax_measures": [
     {
-      "name": "Positive Review Rate",
-      "expression": "DIVIDE(SUM(fact_games[positive_ratings]), SUM(fact_games[total_ratings]))",
-      "description": "Ratio of positive to total ratings, aggregated across all matching games — never an average of per-game rates, which would over-weight low-review titles."
+      "name": "YearTable (calculated table)",
+      "expression": "YearTable = \nVAR MinYear = CALCULATE(YEAR(MIN(fact_games[release_date])), ALL(fact_games))\nVAR MaxYear = CALCULATE(YEAR(MAX(fact_games[release_date])), ALL(fact_games))\nRETURN\nSELECTCOLUMNS(\n    GENERATESERIES(MinYear, MaxYear, 1),\n    \"Year\", [Value],\n    \"IsPartialYear\", [Value] = MaxYear\n)",
+      "description": "A lightweight year-grain table (not a daily calendar — every temporal requirement here operates at year grain). IsPartialYear is TRUE only for the final year in the range, since the data ends mid-year (2019-05-01). Relationship: YearTable[Year] (1) → fact_games[release_year] (*), single direction."
     },
     {
       "name": "Total Games",
-      "expression": "COUNTROWS(fact_games)",
-      "description": "Row count of the fact table for the current filter context."
+      "expression": "Total Games = COUNTROWS(fact_games)",
+      "description": "Counts fact_games, not game_genres — the bridge table fans out (76,462 rows for 27,075 games), so counting it directly would overcount. Correctly cross-filters from a genre slicer because the fact_games ↔ game_genres relationship is bidirectional."
     },
     {
-      "name": "Avg Price Paid",
-      "expression": "CALCULATE(AVERAGE(fact_games[price]), fact_games[is_free] = FALSE)",
-      "description": "Mean listed price across non-free games only."
+      "name": "Average Price (Paid)",
+      "expression": "Average Price (Paid) = \nCALCULATE(\n    AVERAGE(fact_games[price]),\n    fact_games[is_free] = FALSE\n)",
+      "description": "Excludes $0 titles — blending them in would understate what a typical paid game costs. Validated: $6.71. A companion measure Average Price (All) = AVERAGE(fact_games[price]) exists as a secondary measure showing how much free titles pull the average down."
+    },
+    {
+      "name": "Positive Review Rate",
+      "expression": "Positive Review Rate = \nDIVIDE(\n    SUM(fact_games[positive_ratings]),\n    SUM(fact_games[total_ratings])\n)",
+      "description": "Ratio of sums, not AVERAGE() of the per-game rate column. Averaging the rate directly would weight a 3-review game the same as a 500,000-review game — this is why raw positive_ratings/negative_ratings are kept as additive columns in Gold."
+    },
+    {
+      "name": "Free-to-Play Ratio",
+      "expression": "Free-to-Play Ratio = \nDIVIDE(\n    CALCULATE(COUNTROWS(fact_games), fact_games[is_free] = TRUE),\n    COUNTROWS(fact_games)\n)",
+      "description": "Percentage of games that are free-to-play. Validated: 9.5%."
+    },
+    {
+      "name": "Genre Market Share",
+      "expression": "Genre Market Share = \nVAR GamesInGenre = COUNTROWS(fact_games)\nVAR TotalGamesInContext = CALCULATE(COUNTROWS(fact_games), REMOVEFILTERS(game_genres))\nRETURN DIVIDE(GamesInGenre, TotalGamesInContext)",
+      "description": "Share of whatever is currently filtered — only the genre filter itself is removed. Makes cross-filtering by year or price tier meaningful. Genres are multi-label (85% of games carry more than one), so shares do not sum to 100% — never chart this as a pie or donut; use a horizontal bar chart. Validated: Action, no other filters active ≈ 43.96%."
+    },
+    {
+      "name": "YoY Release Growth",
+      "expression": "YoY Release Growth = \nVAR CurrentYear = SELECTEDVALUE(YearTable[Year])\nVAR IsPartial = SELECTEDVALUE(YearTable[IsPartialYear])\nVAR CurrentYearGames = COUNTROWS(fact_games)\nVAR PriorYearGames = \n    CALCULATE(\n        COUNTROWS(fact_games),\n        REMOVEFILTERS(YearTable),\n        YearTable[Year] = CurrentYear - 1\n    )\nRETURN\nIF(\n    ISBLANK(CurrentYear) || IsPartial,\n    BLANK(),\n    DIVIDE(CurrentYearGames - PriorYearGames, PriorYearGames)\n)",
+      "description": "Returns BLANK() for 2019 — the dataset's final year is a partial period (through 2019-05-01), and a growth % comparing 4 months to 12 months isn't a real rate. DIVIDE's blank-safe behavior also handles 1997 (no 1996) without a separate guard. Validated: 2018 → 28.4%, 2017 → 45.8%, 2019 → blank."
+    },
+    {
+      "name": "Price Tier Sort (supporting column)",
+      "expression": "Price Tier Sort = \nSWITCH(\n    fact_games[price_tier],\n    \"Free\", 0,\n    \"Budget ($0.01-$4.99)\", 1,\n    \"Standard ($5-$14.99)\", 2,\n    \"Premium ($15-$29.99)\", 3,\n    \"AAA ($30+)\", 4\n)",
+      "description": "Text sorts alphabetically by default (AAA, Budget, Free...). This calculated column, set via Column tools → Sort by Column, forces the price tier axis into logical price order."
+    },
+    {
+      "name": "% Windows / % Mac / % Linux (platform evolution)",
+      "expression": "% Windows = DIVIDE(CALCULATE(COUNTROWS(fact_games), fact_games[has_windows] = TRUE), COUNTROWS(fact_games))\n% Mac     = DIVIDE(CALCULATE(COUNTROWS(fact_games), fact_games[has_mac]     = TRUE), COUNTROWS(fact_games))\n% Linux   = DIVIDE(CALCULATE(COUNTROWS(fact_games), fact_games[has_linux]   = TRUE), COUNTROWS(fact_games))",
+      "description": "% Windows sits essentially flat near 100% across the whole timeline (only 5 non-Windows games in the catalog) — that's correct, not a broken chart. The real signal in platform evolution is the Mac/Linux trajectory."
     }
   ],
-  "data_model_notes": "PLACEHOLDER — replace with the real content from powerbi/dax_measures.md and docs/data_dictionary.md before deploying.",
+  "data_model_notes": "The Power BI data model consists of three tables:\n\n1. fact_games (27,075 rows): one row per Steam appid, containing name, developer, publisher, release_date/year, price, price_tier (Free/Budget/Standard/Premium/AAA), is_free, positive_ratings, negative_ratings, total_ratings, positive_review_rate, achievements, owners_min/max/avg (estimated bucket midpoints), and has_windows/has_mac/has_linux booleans.\n\n2. game_genres (76,462 rows, 29 distinct genres): a bridge table linking games to genres. 85% of games carry multiple genres, so genre shares do not sum to 100%.\n\n3. YearTable (23 rows, 1997-2019): a calculated dimension built with GENERATESERIES. Contains a boolean IsPartialYear flag that is TRUE only for 2019.\n\nRelationships:\n• fact_games (1) ↔ game_genres (*) — bidirectional filtering, so a genre slicer correctly filters fact_games KPIs.\n• YearTable[Year] (1) → fact_games[release_year] (*) — single direction, standard dimension-filters-fact pattern.",
   "pbix_reference": {
     "filename": "steam_dashboard.pbix",
     "note": "Lives in the repo under powerbi/ — this tab links to it, it does not embed or host it."
   },
-  "screenshots": ["overview.png", "pricing_reviews.png", "temporal_trends.png"],
+  "screenshots": ["page1_market_overview.png", "page2_pricing_reviews.png", "page3_temporal_trends.png"],
   "powerbi_embed_url": null
 }

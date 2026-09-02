@@ -1,0 +1,59 @@
+.card {
+  padding-top: var(--space-5);
+  border-top: 1px solid var(--color-border);
+}
+
+.title {
+  font-size: 20px;
+  font-weight: 600;
+}
+
+.body {
+  margin-top: var(--space-4);
+  min-height: 220px;
+}
+
+.note {
+  color: var(--color-text-muted);
+  font-size: 13px;
+  margin-top: var(--space-3);
+  max-width: 640px;
+  line-height: 1.6;
+}
+
+.skeleton {
+  height: 220px;
+  border-radius: var(--radius-sm);
+  background: linear-gradient(
+    90deg,
+    var(--color-surface) 25%,
+    var(--color-surface-raised) 37%,
+    var(--color-surface) 63%
+  );
+  background-size: 400% 100%;
+  animation: shimmer 1.4s ease infinite;
+}
+
+.error {
+  height: 220px;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap: var(--space-3);
+  color: var(--color-text-muted);
+}
+
+.retry {
+  background: none;
+  border: 1px solid var(--color-border);
+  color: var(--color-text);
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.retry:hover {
+  border-color: var(--color-accent);
+}

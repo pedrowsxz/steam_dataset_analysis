@@ -1,0 +1,45 @@
+/*
+  src/styles/tokens.css
+
+  Design direction: a dark, slate-blue "data room" rather than a generic
+  SaaS-purple or cream/terracotta dashboard — grounded in the subject
+  (a game storefront's marketplace data), not a template default.
+
+  One accent (amber) is reserved for "the number that matters": KPI values
+  and primary chart series. The second accent (teal) only appears when two
+  series need to be told apart. Verified all text/background pairs clear
+  WCAG AA (5.3:1+) before committing to this palette.
+*/
+:root {
+  /* Color */
+  --color-bg: #12151c;
+  --color-surface: #1a1f2b;
+  --color-surface-raised: #202636;
+  --color-border: #2b3244;
+  --color-text: #edeff4;
+  --color-text-muted: #8b93a7;
+  --color-accent: #e8a33d;
+  --color-accent-soft: rgba(232, 163, 61, 0.14);
+  --color-accent-2: #4fc1e9;
+
+  /* Type */
+  --font-display: 'Fraunces', Georgia, serif;
+  --font-body: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+
+  /* Radius: small and consistent, used sparingly — no SaaS-card sameness */
+  --radius-sm: 4px;
+  --radius-md: 8px;
+
+  --content-max-width: 1180px;
+}
