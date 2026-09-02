@@ -16,7 +16,7 @@ jobs:
       run:
         working-directory: export
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -54,7 +54,7 @@ jobs:
       # A throwaway container the job destroys on exit — not Neon, never production.
       DATABASE_URL: postgresql://postgres:postgres@localhost:5432/steam_ci
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-python@v5
         with:
@@ -75,7 +75,7 @@ jobs:
       run:
         working-directory: frontend
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - uses: actions/setup-node@v6
         with:
@@ -99,7 +99,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v7
 
       - name: Trigger Render deploy
         env:
