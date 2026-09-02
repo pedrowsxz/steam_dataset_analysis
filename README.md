@@ -2,6 +2,10 @@
 
 End-to-end BI project: raw Kaggle data → Medallion Lakehouse (Databricks Free Edition) → Power BI dashboard. Built specifically around the stack required for an **Administrative BI Assistant** role: Python, SQL, Databricks, PySpark/Delta Lake, Power BI/DAX.
 
+# Live link
+
+[steam-dataset-analysis.vercel.app](https://steam-dataset-analysis.vercel.app/)
+
 ## Screenshots
 
 
