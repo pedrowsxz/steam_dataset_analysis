@@ -36,3 +36,9 @@ data/bronze/*
 .DS_Store
 .vscode/
 .idea/
+
+node_modules/
+dist/
+.env
+.env.local
+.vercel
