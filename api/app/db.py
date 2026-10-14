@@ -19,6 +19,10 @@ from .config import get_settings
 def _build_engine() -> Engine:
     settings = get_settings()
     url = settings.database_url
+    if url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql+psycopg2://", 1)
+    elif url.startswith("postgresql://"):
+        url = url.replace("postgresql://", "postgresql+psycopg2://", 1)
     is_local = "localhost" in url or "127.0.0.1" in url
     # Neon requires SSL; local dev/test Postgres doesn't have it configured.
     connect_args = {"sslmode": "require"} if (not is_local and "sslmode=" not in url) else {}
